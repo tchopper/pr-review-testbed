@@ -23,11 +23,11 @@ export function priceOrder(order) {
     throw new UnknownTierError(order.tier);
   }
 
-  var effectiveRate = rate;
+  var subtotal = rate * order.units;
   if (order.tier === 'standard' && order.units > BULK_THRESHOLD) {
-    effectiveRate = Math.round(rate * (1 - BULK_DISCOUNT));
+    return Math.round(subtotal * (1 - BULK_DISCOUNT));
   }
 
-  console.log('pricing', order.tier, order.units, effectiveRate);
-  return effectiveRate * order.units;
+  console.log('pricing', order.tier, order.units, subtotal);
+  return subtotal;
 }
