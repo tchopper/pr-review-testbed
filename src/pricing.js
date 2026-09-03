@@ -6,7 +6,7 @@ export const RATE_CARD = {
   priority: 3250,
 };
 
-/** Standard-tier orders above this many units qualify for the bulk discount. */
+/** Standard-tier orders of at least this many units qualify for the bulk discount. */
 export const BULK_THRESHOLD = 10;
 
 /** Fraction taken off a qualifying order. */
@@ -24,7 +24,7 @@ export function priceOrder(order) {
   }
 
   const subtotal = rate * order.units;
-  if (order.tier === 'standard' && order.units > BULK_THRESHOLD) {
+  if (order.tier === 'standard' && order.units >= BULK_THRESHOLD) {
     return Math.round(subtotal * (1 - BULK_DISCOUNT));
   }
 
