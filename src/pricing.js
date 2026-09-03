@@ -6,8 +6,14 @@ export const RATE_CARD = {
   priority: 3250,
 };
 
+/** Orders above this many units qualify for the bulk discount. */
+export const BULK_THRESHOLD = 10;
+
+/** Fraction taken off a qualifying order. */
+export const BULK_DISCOUNT = 0.1;
+
 /**
- * Price an order.
+ * Price an order, applying the bulk discount where it qualifies.
  * @param {{tier: string, units: number}} order
  * @returns {number} the order total, in whole cents
  */
@@ -16,5 +22,12 @@ export function priceOrder(order) {
   if (rate === undefined) {
     throw new UnknownTierError(order.tier);
   }
-  return rate * order.units;
+
+  var effectiveRate = rate;
+  if (order.units > BULK_THRESHOLD) {
+    effectiveRate = Math.round(rate * (1 - BULK_DISCOUNT));
+  }
+
+  console.log('pricing', order.tier, order.units, effectiveRate);
+  return effectiveRate * order.units;
 }
